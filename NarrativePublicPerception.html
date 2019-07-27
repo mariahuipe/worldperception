@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  font-weight:bold;
+  font-size:200%;
+}
+
+text {
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 11px;
+  font-weight:bold;
+}
+
+
+svg {
+        display: block;
+        width: 100%;
+        height: auto;
+}
+.names {
+font-family: Book Antiqua;
+  font-size: 10px;
+
+}
+h2{
+color:black;
+}
+.correct-class
+{
+   color:green;
+   font-weight:bold
+}
+
+.incorrect-class
+{
+	color:red;
+	font-weight:bold
+}
+
+.dontknow-class
+{
+	color: #ffbb99;
+	font-weight:bold;
+}
+#question-asked
+{
+	font-weight:bold;
+}
+
+
+.next{
+	background-color:#ba80b1d3;
+}
+.btn-sample:active {
+  background-color:"lightblue";
+}
+
+.cirs {
+  stroke: #000;
+}
+.container {
+    width: 100%;
+    padding-right:15px;
+    padding-left:15px;
+    margin-right:150px;
+    margin-left:100px !important;;
+}
+
+</style>
+
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+<body>
+<p>
+		<div class="col-md-12">
+		<h3>
+			&nbsp;&nbsp;&nbsp; How has the world Changed? Perception vs Reality
+		</h3>
+		<p>
+		<h6>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    The opinion research organization Ipsos MORI conducted a detailed survey of 26,489 people across 28 countries. </br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; Here are some answers of the survery compared with the reality. 
+		</h6>
+		</p>
+		 
+		</div>
+</p>	
+		
+<div class="container" >
+
+	<div class="row" >
+		<div  class="btn-toolbar" class="col-md-12">
+			 <button id="scene1" type="button type="button"  class="next btn btn-success  btn-sm" onclick="Slide1();">1</button>
+			 <button id="scene2" type="button type="button"  class="next btn btn-success  btn-sm" onclick="Slide2();">2</button>
+			 <button id="scene3" type="button type="button"  class="next btn btn-success  btn-sm" onclick="Slide3();">3</button>
+			 <button id="scene4" type="button type="button"  class="next btn btn-success  btn-sm" onclick="Slide4();">4</button>		
+		</div>
+	</div>	
+	<div class="row">
+	<p></p>
+	</div>
+	<div class="row">
+		<div  id="question-asked" class="col-md-12">
+		
+		  Question 1: In the last 20 years, the proportion of the world population living in extreme poverty has…?
+		
+		</div>	
+	</div>	
+	
+    <div class="row"  id="div-perception-chart">
+	   <div class="col-md-6">
+  	     <button type="button" id="IncreasedBtn" class="btn btn-info  btn-sm" onclick="refreshGraph('PovertyIncreased');">Increased</button> 
+		  <button type="button" id="SameBtn" class="btn btn-info  btn-sm" onclick="refreshGraph('PovertySame');">Don't Know</button>
+		 <button type="button" id="DecreasedBtn" class="btn btn-info  btn-sm" onclick="refreshGraph('PovertyDecreased');">Decreased</button>
+		</br>
+		<span id="title-chart" >  </span> 		 
+		  <div id="div-country-chart" class="div-country-chart">
+		 <svg class="country-chart" width="500" height="600"></svg>
+		  </div>
+		
+		
+		</div>
+		<div id="reality-column" class="col-md-6">
+			<span id="reality-title"><strong>Reality:</strong></span>
+			<div class="reality-statement" id="reality-statement">
+				Number of People in extreme poverty has <strong>Decreased</strong>.
+                </br>Global Average People answered Correctly: <span class="correct-class"> 20%</span>
+                </br>Global Average People answered Wrong:  <span class="incorrect-class"> 52%</span>
+                </br>Global Average People answered "Don't Know":<span class="dontknow-class">    18%	</span>	
+			</div>				
+		</div>
+	</div> 
+
+
+
+  
+</div> <!-- container -->
+
+
+<script>
+var datapoverty = [
+{"Country":"Argentina","PovertyDecreased":9,"PovertySame":24,"PovertyIncreased":67,"ChildMortalityDecreased":27,"ChildMortalitySame":35,"ChildMortalityIncreased":38,"MaternalMortalityDecreased":42,"MaternalMortalitySame":40,"MaternalMortalityIncreased":18,IncomeLevelOn1990:"NotLow"},
+{"Country":"Australia","PovertyDecreased":19,"PovertySame":38,"PovertyIncreased":43,"ChildMortalityDecreased":28,"ChildMortalitySame":54,"ChildMortalityIncreased":18,"MaternalMortalityDecreased":42,"MaternalMortalitySame":48,"MaternalMortalityIncreased":10,IncomeLevelOn1990:"NotLow"},
+{"Country":"Belgium","PovertyDecreased":12,"PovertySame":30,"PovertyIncreased":58,"ChildMortalityDecreased":31,"ChildMortalitySame":46,"ChildMortalityIncreased":23,"MaternalMortalityDecreased":49,"MaternalMortalitySame":43,"MaternalMortalityIncreased":8,IncomeLevelOn1990:"NotLow"},
+{"Country":"Brazil","PovertyDecreased":21,"PovertySame":28,"PovertyIncreased":51,"ChildMortalityDecreased":42,"ChildMortalitySame":31,"ChildMortalityIncreased":26,"MaternalMortalityDecreased":45,"MaternalMortalitySame":36,"MaternalMortalityIncreased":19,IncomeLevelOn1990:"NotLow"},
+{"Country":"Canada","PovertyDecreased":17,"PovertySame":35,"PovertyIncreased":48,"ChildMortalityDecreased":29,"ChildMortalitySame":50,"ChildMortalityIncreased":21,"MaternalMortalityDecreased":43,"MaternalMortalitySame":43,"MaternalMortalityIncreased":14,IncomeLevelOn1990:"NotLow"},
+{"Country":"China","PovertyDecreased":49,"PovertySame":30,"PovertyIncreased":21,"ChildMortalityDecreased":52,"ChildMortalitySame":34,"ChildMortalityIncreased":14,"MaternalMortalityDecreased":55,"MaternalMortalitySame":35,"MaternalMortalityIncreased":10,IncomeLevelOn1990:"Low"},
+{"Country":"France","PovertyDecreased":9,"PovertySame":23,"PovertyIncreased":68,"ChildMortalityDecreased":39,"ChildMortalitySame":46,"ChildMortalityIncreased":15,"MaternalMortalityDecreased":52,"MaternalMortalitySame":40,"MaternalMortalityIncreased":8,IncomeLevelOn1990:"NotLow"},
+{"Country":"Germany","PovertyDecreased":11,"PovertySame":26,"PovertyIncreased":63,"ChildMortalityDecreased":31,"ChildMortalitySame":46,"ChildMortalityIncreased":24,"MaternalMortalityDecreased":50,"MaternalMortalitySame":41,"MaternalMortalityIncreased":9,IncomeLevelOn1990:"NotLow"},
+{"Country":"Great Britain","PovertyDecreased":21,"PovertySame":36,"PovertyIncreased":43,"ChildMortalityDecreased":35,"ChildMortalitySame":47,"ChildMortalityIncreased":18,"MaternalMortalityDecreased":44,"MaternalMortalitySame":44,"MaternalMortalityIncreased":12,IncomeLevelOn1990:"NotLow"},
+{"Country":"Hungary","PovertyDecreased":9,"PovertySame":23,"PovertyIncreased":68,"ChildMortalityDecreased":33,"ChildMortalitySame":46,"ChildMortalityIncreased":21,"MaternalMortalityDecreased":54,"MaternalMortalitySame":37,"MaternalMortalityIncreased":9,IncomeLevelOn1990:"NotLow"},
+{"Country":"India","PovertyDecreased":35,"PovertySame":24,"PovertyIncreased":41,"ChildMortalityDecreased":51,"ChildMortalitySame":25,"ChildMortalityIncreased":24,"MaternalMortalityDecreased":57,"MaternalMortalitySame":21,"MaternalMortalityIncreased":22,IncomeLevelOn1990:"Low"},
+{"Country":"Indonesia","PovertyDecreased":31,"PovertySame":25,"PovertyIncreased":44,"ChildMortalityDecreased":43,"ChildMortalitySame":31,"ChildMortalityIncreased":26,"MaternalMortalityDecreased":50,"MaternalMortalitySame":29,"MaternalMortalityIncreased":21,IncomeLevelOn1990:"Low"},
+{"Country":"Italy","PovertyDecreased":9,"PovertySame":31,"PovertyIncreased":60,"ChildMortalityDecreased":28,"ChildMortalitySame":52,"ChildMortalityIncreased":20,"MaternalMortalityDecreased":37,"MaternalMortalitySame":49,"MaternalMortalityIncreased":14,IncomeLevelOn1990:"NotLow"},
+{"Country":"Japan","PovertyDecreased":9,"PovertySame":59,"PovertyIncreased":32,"ChildMortalityDecreased":20,"ChildMortalitySame":67,"ChildMortalityIncreased":13,"MaternalMortalityDecreased":33,"MaternalMortalitySame":60,"MaternalMortalityIncreased":7,IncomeLevelOn1990:"NotLow"},
+{"Country":"Kenya","PovertyDecreased":37,"PovertySame":8,"PovertyIncreased":55,"ChildMortalityDecreased":69,"ChildMortalitySame":9,"ChildMortalityIncreased":22,"MaternalMortalityDecreased":77,"MaternalMortalitySame":4,"MaternalMortalityIncreased":19,IncomeLevelOn1990:"Low"},
+{"Country":"Mexico","PovertyDecreased":11,"PovertySame":22,"PovertyIncreased":67,"ChildMortalityDecreased":34,"ChildMortalitySame":34,"ChildMortalityIncreased":31,"MaternalMortalityDecreased":44,"MaternalMortalitySame":34,"MaternalMortalityIncreased":22,IncomeLevelOn1990:"NotLow"},
+{"Country":"Nigeria","PovertyDecreased":25,"PovertySame":11,"PovertyIncreased":64,"ChildMortalityDecreased":58,"ChildMortalitySame":19,"ChildMortalityIncreased":23,"MaternalMortalityDecreased":60,"MaternalMortalitySame":13,"MaternalMortalityIncreased":27,IncomeLevelOn1990:"Low"},
+{"Country":"Peru","PovertyDecreased":36,"PovertySame":28,"PovertyIncreased":36,"ChildMortalityDecreased":38,"ChildMortalitySame":34,"ChildMortalityIncreased":29,"MaternalMortalityDecreased":47,"MaternalMortalitySame":33,"MaternalMortalityIncreased":20,IncomeLevelOn1990:"Low"},
+{"Country":"Poland","PovertyDecreased":24,"PovertySame":37,"PovertyIncreased":39,"ChildMortalityDecreased":45,"ChildMortalitySame":39,"ChildMortalityIncreased":16,"MaternalMortalityDecreased":52,"MaternalMortalitySame":39,"MaternalMortalityIncreased":9,IncomeLevelOn1990:"Low"},
+{"Country":"Russia","PovertyDecreased":12,"PovertySame":23,"PovertyIncreased":65,"ChildMortalityDecreased":40,"ChildMortalitySame":39,"ChildMortalityIncreased":21,"MaternalMortalityDecreased":49,"MaternalMortalitySame":38,"MaternalMortalityIncreased":13,IncomeLevelOn1990:"NotLow"},
+{"Country":"Saudi Arabia","PovertyDecreased":14,"PovertySame":30,"PovertyIncreased":56,"ChildMortalityDecreased":33,"ChildMortalitySame":41,"ChildMortalityIncreased":27,"MaternalMortalityDecreased":45,"MaternalMortalitySame":41,"MaternalMortalityIncreased":14,IncomeLevelOn1990:"NotLow"},
+{"Country":"Senegal","PovertyDecreased":35,"PovertySame":14,"PovertyIncreased":51,"ChildMortalityDecreased":77,"ChildMortalitySame":11,"ChildMortalityIncreased":12,"MaternalMortalityDecreased":77,"MaternalMortalitySame":8,"MaternalMortalityIncreased":15,IncomeLevelOn1990:"Low"},
+{"Country":"South Africa","PovertyDecreased":16,"PovertySame":16,"PovertyIncreased":68,"ChildMortalityDecreased":31,"ChildMortalitySame":31,"ChildMortalityIncreased":38,"MaternalMortalityDecreased":48,"MaternalMortalitySame":30,"MaternalMortalityIncreased":22,IncomeLevelOn1990:"NotLow"},
+{"Country":"South Korea","PovertyDecreased":15,"PovertySame":47,"PovertyIncreased":38,"ChildMortalityDecreased":35,"ChildMortalitySame":45,"ChildMortalityIncreased":20,"MaternalMortalityDecreased":51,"MaternalMortalitySame":40,"MaternalMortalityIncreased":9,IncomeLevelOn1990:""},
+{"Country":"Spain","PovertyDecreased":11,"PovertySame":33,"PovertyIncreased":56,"ChildMortalityDecreased":30,"ChildMortalitySame":50,"ChildMortalityIncreased":21,"MaternalMortalityDecreased":48,"MaternalMortalitySame":42,"MaternalMortalityIncreased":10,IncomeLevelOn1990:"NotLow"},
+{"Country":"Sweden","PovertyDecreased":30,"PovertySame":31,"PovertyIncreased":39,"ChildMortalityDecreased":38,"ChildMortalitySame":42,"ChildMortalityIncreased":20,"MaternalMortalityDecreased":49,"MaternalMortalitySame":38,"MaternalMortalityIncreased":13,IncomeLevelOn1990:"NotLow"},
+{"Country":"Turkey","PovertyDecreased":14,"PovertySame":22,"PovertyIncreased":64,"ChildMortalityDecreased":35,"ChildMortalitySame":30,"ChildMortalityIncreased":35,"MaternalMortalityDecreased":50,"MaternalMortalitySame":26,"MaternalMortalityIncreased":24,IncomeLevelOn1990:"Low"},
+{"Country":"United States","PovertyDecreased":15,"PovertySame":34,"PovertyIncreased":51,"ChildMortalityDecreased":26,"ChildMortalitySame":48,"ChildMortalityIncreased":26,"MaternalMortalityDecreased":43,"MaternalMortalitySame":39,"MaternalMortalityIncreased":18,IncomeLevelOn1990:"NotLow"}
+
+];
+
+var countries = ["China","Kenya","Peru","India","Senegal","Indonesia","Sweden","Nigeria",
+"Poland","Brazil","Great Britain","Australia","Canada","South Africa","South Korea","United States",
+"Saudi Arabia","Turkey","Belgium","Russia","Germany","Mexico","Spain","Argentina","France","Hungary",
+"Italy","Japan"];
+
+var countriyIncomeOn1990 = [{"Country":"China"},{"Country":"Kenya"},{"Country":"Peru"},{"Country":"India"},{"Country":"Senegal"},{"Country":"Indonesia"},
+{"Country":"Sweden"},{"Country":"Nigeria"},
+{"Country":"Poland"},{"Country":"Brazil"},{"Country":"Great Britain"},{"Country":"Australia"},{"Country":"Canada"},{"Country":"South Africa"},
+{"Country":"South Korea"},{"Country":"United States"},
+{"Country":"Saudi Arabia"},{"Country":"Turkey"},{"Country":"Belgium"},{"Country":"Russia"},{"Country":"Germany"},{"Country":"Mexico"},{"Country":"Spain"},
+{"Country":"Argentina"},{"Country":"France"},{"Country":"Hungary"},
+{"Country":"Italy"},{"Country":"Japan"}];
+
+var margin = {
+	top: 20,
+	right: 30,
+	bottom: 30,
+	left: 100
+};
+var width = 500 - margin.left - margin.right;
+var height = 600 - margin.top - margin.bottom;
+
+var povertyDecreasedFunct= function (d) { return x(d.PovertyDecreased);};
+
+var x = d3.scaleLinear()
+	.rangeRound([0, width])
+	.domain([0,100]);
+
+var y = d3.scaleBand()
+	.range([height, 0])
+		.padding(0.2)
+	.domain(datapoverty.map(function (d) {
+                return d.Country;
+            }));
+ /*
+var color1 ="#8dd3c7";
+var color2 ="#ffffbc";
+var color3 ="#bebada"; 
+ */
+var color1 ="#8dd3c7";
+var color2 =  "#9ebcda" //"#9ebcda";
+var color3 = "#b2df8a"; 
+var color4 =  "#2c7fb8" //"#9ebcda";
+var color5 ="#edf8b1";
+
+
+var yAxis = d3.axisLeft(y).tickSize(0); 
+
+		
+function Slide1()
+{
+	d3.select(".country-chart").html="";
+
+	document.getElementById("IncreasedBtn").style= "visibility:block";
+	document.getElementById("DecreasedBtn").style= "visibility:block";
+	document.getElementById("SameBtn").style= "visibility:block";	
+	document.getElementById("reality-title").style= "visibility:block";	
+	 
+	refreshGraph("PovertyIncreased");
+	
+	document.getElementById("IncreasedBtn").onclick = function() {refreshGraph("PovertyIncreased");};
+	document.getElementById("DecreasedBtn").onclick = function() {refreshGraph("PovertyDecreased");};
+	document.getElementById("SameBtn").onclick = function() {refreshGraph("PovertySame");};
+	
+	 document.getElementById("question-asked").innerHTML = "Question 1:  In the last 20 years, the proportion of the world population living in extreme poverty has…?";
+	document.getElementById("reality-statement").innerHTML =
+	 // "<p> The people living in extreme poverty across the world has been declining for "+
+	//  " two centuries and in the last 20 years this positive development has been faster than ever before.</p>"+
+	   "<p>&nbsp;</p><p>Number of People in extreme poverty has <strong>Decreased</strong>. " + 
+               " </br>Global Average People answered Correctly: <span class='correct-class'> 20%</span>" +
+               " </br>Global Average People answered Wrong:  <span class='incorrect-class'> 52%</span>" +
+               " </br>Global Average People answered I do not Know:<span class='dontknow-class'>    18%	</span></p>" ;
+}	
+	
+function Slide2()
+{
+	d3.select(".country-chart").html="";
+
+	document.getElementById("IncreasedBtn").style= "visibility:block";
+	document.getElementById("DecreasedBtn").style= "visibility:block";
+	document.getElementById("SameBtn").style= "visibility:block";
+	document.getElementById("reality-title").style= "visibility:block";	
+		
+
+	refreshGraph("ChildMortalityIncreased");
+	document.getElementById("IncreasedBtn").onclick = function() {refreshGraph("ChildMortalityIncreased");};
+	document.getElementById("DecreasedBtn").onclick = function() {refreshGraph("ChildMortalityDecreased");};
+	document.getElementById("SameBtn").onclick = function() {refreshGraph("ChildMortalitySame");};
+	  document.getElementById("question-asked").innerHTML =" Question 2:  In the last 20 years, has the child mortality rate in developing countries increased, decreased or stayed about the same?";
+	document.getElementById("reality-statement").innerHTML = //" <p>Child mortality rates around the world continues to decline. </p>"+ //Those in developing countries are much more likely to say it is decreasing than those in developed economies. "+
+	  "<p>&nbsp;</p><p>Child Mortality has <strong>Decreased</strong>. " + 
+               " </br>Global Average People answered Correctly: <span class='correct-class'> 39%</span>" +
+               " </br>Global Average People answered Wrong:  <span class='incorrect-class'> 23%</span>" +
+               " </br>Global Average People answered I do not Know:<span class='dontknow-class'> 38%	</span></p>" ;
+}	
+	
+function Slide3()
+{
+	d3.select(".country-chart").html="";
+
+	document.getElementById("IncreasedBtn").style= "visibility:block";
+	document.getElementById("DecreasedBtn").style= "visibility:block";
+	document.getElementById("SameBtn").style= "visibility:block";
+	document.getElementById("reality-title").style= "visibility:block";	
+	 
+
+	refreshGraph("MaternalMortalityIncreased");
+	document.getElementById("IncreasedBtn").onclick = function() {refreshGraph("MaternalMortalityIncreased");};
+	document.getElementById("DecreasedBtn").onclick = function() {refreshGraph("MaternalMortalityDecreased");};
+	document.getElementById("SameBtn").onclick = function() {refreshGraph("MaternalMortalitySame");};
+	document.getElementById("question-asked").innerHTML ="Question 3: Since 1990, the percentage of mothers around the world who have died during childbirth has…";
+	
+	document.getElementById("reality-statement").innerHTML= //"<p>Globally, maternal mortality has been declining.</p>"+ //Nearly half answer correctly, but 39 percent are unsure</p>"
+				"<p>&nbsp;</p><p>Maternal mortality has <strong>Decreased</strong>. " + 	             
+				 " </br>Global Average People answered Correctly: <span class='correct-class'> 50%</span>" +
+               " </br>Global Average People answered Wrong:  <span class='incorrect-class'> 15%</span>" +
+               " </br>Global Average People answered I do not Know:<span class='dontknow-class'> 35%	</span></p>" ;
+}		
+
+
+function Slide4()
+{
+   
+	d3.select(".country-chart").html= "";
+
+	document.getElementById("IncreasedBtn").style= "visibility:hidden";
+	document.getElementById("DecreasedBtn").style= "visibility:hidden";
+	document.getElementById("SameBtn").style= "visibility:hidden";
+	document.getElementById("reality-title").style= "visibility:hidden";	
+
+	//refreshGraph("Average of Optimism");
+	
+	document.getElementById("question-asked").innerHTML ="";
+	
+	document.getElementById("reality-statement").innerHTML= //"<p> more text</p>"
+				"<p>&nbsp;</p><p>";
+			   
+	refreshAverageGraph();		   
+}	
+
+
+function cleanUpGraph()
+{
+     d3.select(".country-chart")
+	.selectAll(".axis").remove(); 
+
+	
+	d3.select(".country-chart")
+				.selectAll(".bar").remove();	
+	d3.select(".country-chart")
+				.selectAll(".cirs").remove();	
+	d3.select(".country-chart")
+				.selectAll(".label-value").remove();	
+				
+}
+		
+function getCallBackFunction(graphtype, offset){
+	switch(graphtype) {
+	case "PovertyDecreased":
+		return function (d) { return x(d.PovertyDecreased) + offset;};
+		break;
+	case "PovertyIncreased":
+		return function (d) { return x(d.PovertyIncreased)+ offset;};
+		break;
+	case "PovertySame":
+		return function (d) { return x(d.PovertySame)+ offset;};
+		break;	
+	case "ChildMortalityDecreased":
+		return function (d) { return x(d.ChildMortalityDecreased) + offset;};
+		break;
+	case "ChildMortalityIncreased":
+		return function (d) { return x(d.ChildMortalityIncreased)+ offset;};
+		break;
+	case "ChildMortalitySame":
+		return function (d) { return x(d.ChildMortalitySame)+ offset;};
+		break;	
+	case "MaternalMortalityDecreased":
+		return function (d) { return x(d.MaternalMortalityDecreased) + offset;};
+		break;
+	case "MaternalMortalityIncreased":
+		return function (d) { return x(d.MaternalMortalityIncreased)+ offset;};
+		break;
+	case "MaternalMortalitySame":
+		return function (d) { return x(d.MaternalMortalitySame)+ offset;};
+		break;	
+	case "Average":
+		return function (d) { return (Math.round(x((d.PovertyDecreased + d.ChildMortalityDecreased + d.MaternalMortalityDecreased)/3) )) + offset;};
+		break;	
+	default:
+    // code block
+	}
+
+}
+
+function getTotalPercentText(graphtype){
+
+	switch(graphtype) {
+	case "PovertyDecreased":
+		return function (d) { return d.PovertyDecreased + "%";};
+		break;
+	case "PovertyIncreased":
+		return function (d) { return d.PovertyIncreased + "%";};
+		break;
+	case "PovertySame":
+		return function (d) { return d.PovertySame + "%";};
+		break;	
+	case "ChildMortalityDecreased":
+		return function (d) { return d.ChildMortalityDecreased + "%";};
+		break;
+	case "ChildMortalityIncreased":
+		return function (d) { return d.ChildMortalityIncreased + "%";};
+		break;
+	case "ChildMortalitySame":
+		return function (d) { return d.ChildMortalitySame + "%";};
+		break;	
+	case "MaternalMortalityDecreased":
+		return function (d) { return d.MaternalMortalityDecreased + "%";};
+		break;
+	case "MaternalMortalityIncreased":
+		return function (d) { return d.MaternalMortalityIncreased + "%";};
+		break;
+	case "MaternalMortalitySame":
+		return function (d) { return d.MaternalMortalitySame + "%";};	
+	case "Average":
+		return function (d) { return Math.round((d.PovertyDecreased + d.ChildMortalityDecreased + d.MaternalMortalityDecreased)/3)  + "%";};
+		break;			
+  default:
+    // code block
+	}				
+				
+}
+
+function getGraphTitle(graphtype){
+
+	switch(graphtype) {
+	case "PovertyDecreased":
+		return  "Perception on Extreme Poverty : It has Decreased ";
+		break;
+	case "PovertyIncreased":
+		return "Perception on Extreme Poverty : It has Increased ";
+		break;
+	case "PovertySame":
+		return  "Perception on Extreme Poverty : I do not know";
+		break;	
+	case "ChildMortalityDecreased":
+		return  "Perception on Child Mortality: It has Decreased";
+		break;
+	case "ChildMortalityIncreased":
+		return  "Perception on Child Mortality: It has Increased";
+		break;
+	case "ChildMortalitySame":
+		return "Perception on Child Mortality : I do not know";
+		break;	
+	case "MaternalMortalityDecreased":
+		return  "Perception on Maternal Mortality : It has Decreased";
+		break;
+	case "MaternalMortalityIncreased":
+		return  "Perception on Maternal Mortality : It has Increased";
+		break;
+	case "MaternalMortalitySame":
+		return "Perception on Maternal Mortality : I do not know";		
+  default:
+    // code block
+	}				
+				
+}
+
+
+
+function refreshGraph(typeofgraph){
+
+  cleanUpGraph();
+  document.getElementById("title-chart").innerHTML="";
+ //document.getElementById("title-chart").textContent=getGraphTitle(typeofgraph);
+ // document.getElementById("title-chart").textContent=getGraphTitle(typeofgraph);
+  insertAxis("Y");
+	
+  var colorGraph= color1;
+  if (typeofgraph.includes("Increased"))
+  {
+	colorGraph = color1;
+  }else if (typeofgraph.includes("Same"))
+  {
+	colorGraph = color2;
+  }else if (typeofgraph.includes("Decreased"))
+  {
+	colorGraph = color3;
+  };
+  
+ bars.append("rect")
+            .attr("class", "bar")
+            .attr("y", function (d) {
+                return y(d.Country);
+            })
+			.transition()
+			.attr("fill", colorGraph)
+            .attr("height", y.bandwidth()) 
+            .attr("x", 0)
+            .attr("width",getCallBackFunction(typeofgraph,0));			
+			
+		
+      bars.append("text")
+			.attr("class", "label-value")
+            .attr("y", function (d) {
+                return y(d.Country) + (y.bandwidth()/2) +3 ;
+            })
+            .attr("x",  getCallBackFunction(typeofgraph,3))
+            .text(getTotalPercentText(typeofgraph) );	
+
+d3.select("svg").append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        //.style("text-decoration", "underline")  
+        .text(getGraphTitle(typeofgraph));			
+}
+	
+function getColorByIncomeLevel (incomeLevel)
+{
+	if (incomeLevel == "Low")
+		return color4;
+	else return color5;
+
+}	
+
+function refreshAverageGraph(){
+  
+  var colorGraph= color1;
+  
+  cleanUpGraph();
+   document.getElementById("title-chart").innerHTML="<strong>Average of optimistic answers by country<strong>";
+   insertAxis("XY");
+   bars.append("circle")
+            .attr("class", "cirs")
+            .attr("r", "5")
+ 			.attr("fill",  function (d) {
+                return getColorByIncomeLevel(d.IncomeLevelOn1990);
+            })
+            .attr("cx", getCallBackFunction("Average",0))
+			.attr("cy",   function (d) {
+                return y(d.Country) + 8;
+            });			
+	
+}	
+	
+function changeChildMortDecrease(){
+ d3.select(".country-chart")
+ .selectAll(".bar")
+ .transition()
+ .attr("fill", "lightblue")
+.attr("width", function (d) {
+                return x(d.ChildMortalityDecreased);
+      });
+}
+
+function changeChildMortSame(){
+ d3.select("country-chart")
+ .selectAll(".bar")
+ .transition()
+ .attr("fill", "#929598")
+          .attr("width", function (d) {
+                return x(d.ChildMortalitySame);
+            });
+}
+
+function changeChildMortIncrease(){
+ d3.select(".country-chart")
+ .selectAll(".bar")
+ .transition()
+ .attr("fill", "#6fc6a5")
+          .attr("width", function (d) {
+                return x(d.ChildMortalityIncreased);
+            });
+}
+
+
+function insertAxis(whichAxis){
+
+var g;
+	if (whichAxis =="Y")
+	{
+		g = d3.select(".country-chart").append("g").attr("class", "axis").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		g.append("g")
+			.attr("transform", "translate(0," + height + ")");
+			/*.call(d3.axisBottom(x));*/
+
+					
+		g.append("g")
+			.call(yAxis);
+	} else if (whichAxis =="XY")
+	{
+		g = d3.select(".country-chart").append("g").attr("class", "axis").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		g.append("g").attr("class", "axis")
+			.attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x));
+
+					
+		g.append("g")
+			.call(yAxis);
+	}
+
+}
+
+
+/*
+g = d3.select(".country-chart").append("g").attr("class", "axis").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+g.append("g")
+	.attr("transform", "translate(0," + height + ")");
+
+
+	//.call(d3.axisBottom(x))
+var yAxis = d3.axisLeft(y).tickSize(0); 
+			
+g.append("g")
+	.call( yAxis);
+	
+*/
+/*
+insertAxis("Y")	;
+*/	
+var bars =  d3.select(".country-chart").append("g")
+			.selectAll(".bar")
+            .data(datapoverty)
+            .enter()
+            .append("g")
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+			
+	Slide1();
+
+	// refreshGraph("PovertyIncreased");
+			
+ 
+</script>
+</body>
+</html>
+
+
