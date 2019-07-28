@@ -74,6 +74,26 @@ color:black;
     margin-right:150px;
     margin-left:100px !important;;
 }
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+    width: 120px;					
+    height: 25px;					
+    padding: 2px;				
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+	font-size: 12px;
+	font-weight:bold;
+    background: lightblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+
+
+.slide4-text{
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 11px;
+}
 
 </style>
 
@@ -132,7 +152,7 @@ color:black;
 		
 		</div>
 		<div id="reality-column" class="col-md-6">
-			<span id="reality-title"><strong>Reality:</strong></span>
+			<!--<span id="reality-title"><strong>Reality:</strong></span>-->
 			<div class="reality-statement" id="reality-statement">
 				Number of People in extreme poverty has <strong>Decreased</strong>.
                 </br>Global Average People answered Correctly: <span class="correct-class"> 20%</span>
@@ -141,8 +161,13 @@ color:black;
 			</div>				
 		</div>
 	</div> 
-
-
+	<div class="row" >
+	<div class="col-md-12">
+      Source of data: <ol><li> Our World In Data:  <a href="https://ourworldindata.org/wrong-about-the-world">https://ourworldindata.org/wrong-about-the-worlda</a> </li> 
+	<li> Global Perceptions of Development Progress: ‘Perils of Perceptions’ Research <a href="https://www.ipsos.com/en/global-perceptions-development-progress-perils-perceptions-research">https://www.ipsos.com/en/global-perceptions-development-progress-perils-perceptions-research</a></li> 
+	</ol>
+	</div>
+	</div>
 
   
 </div> <!-- container -->
@@ -225,7 +250,9 @@ var color2 =  "#9ebcda" //"#9ebcda";
 var color3 = "#b2df8a"; 
 var color4 =  "#2c7fb8" //"#9ebcda";
 var color5 ="#edf8b1";
-
+var divtooltip = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
 
 var yAxis = d3.axisLeft(y).tickSize(0); 
 
@@ -237,7 +264,7 @@ function Slide1()
 	document.getElementById("IncreasedBtn").style= "visibility:block";
 	document.getElementById("DecreasedBtn").style= "visibility:block";
 	document.getElementById("SameBtn").style= "visibility:block";	
-	document.getElementById("reality-title").style= "visibility:block";	
+//	document.getElementById("reality-title").style= "visibility:block";	
 	 
 	refreshGraph("PovertyIncreased");
 	
@@ -249,10 +276,12 @@ function Slide1()
 	document.getElementById("reality-statement").innerHTML =
 	 // "<p> The people living in extreme poverty across the world has been declining for "+
 	//  " two centuries and in the last 20 years this positive development has been faster than ever before.</p>"+
-	   "<p>&nbsp;</p><p>Number of People in extreme poverty has <strong>Decreased</strong>. " + 
+	   "<p>&nbsp;</p><p><strong>Reality:</strong><br>Number of People in extreme poverty has <strong>Decreased</strong>. " + 
                " </br>Global Average People answered Correctly: <span class='correct-class'> 20%</span>" +
                " </br>Global Average People answered Wrong:  <span class='incorrect-class'> 52%</span>" +
-               " </br>Global Average People answered I do not Know:<span class='dontknow-class'>    18%	</span></p>" ;
+               " </br>Global Average People answered \"I do not Know\":<span class='dontknow-class'>    18%	</span></p>" +
+			     "<p> More than half of the peoople interviewed believes that extreme poverty is rising even if the opposite is true.	</p>"+
+				 "<p>In fact, the share of people living in extreme poverty across the world has been declining for two centuries and in the last 20 years this positive development has been faster than ever before</p>";
 }	
 	
 function Slide2()
@@ -262,7 +291,7 @@ function Slide2()
 	document.getElementById("IncreasedBtn").style= "visibility:block";
 	document.getElementById("DecreasedBtn").style= "visibility:block";
 	document.getElementById("SameBtn").style= "visibility:block";
-	document.getElementById("reality-title").style= "visibility:block";	
+	//document.getElementById("reality-title").style= "visibility:block";	
 		
 
 	refreshGraph("ChildMortalityIncreased");
@@ -271,10 +300,14 @@ function Slide2()
 	document.getElementById("SameBtn").onclick = function() {refreshGraph("ChildMortalitySame");};
 	  document.getElementById("question-asked").innerHTML =" Question 2:  In the last 20 years, has the child mortality rate in developing countries increased, decreased or stayed about the same?";
 	document.getElementById("reality-statement").innerHTML = //" <p>Child mortality rates around the world continues to decline. </p>"+ //Those in developing countries are much more likely to say it is decreasing than those in developed economies. "+
-	  "<p>&nbsp;</p><p>Child Mortality has <strong>Decreased</strong>. " + 
+	  "<p>&nbsp;</p><p><strong>Reality:</strong></br>Child Mortality has <strong>Decreased</strong>. " + 
                " </br>Global Average People answered Correctly: <span class='correct-class'> 39%</span>" +
                " </br>Global Average People answered Wrong:  <span class='incorrect-class'> 23%</span>" +
-               " </br>Global Average People answered I do not Know:<span class='dontknow-class'> 38%	</span></p>" ;
+               " </br>Global Average People answered \"I do not Know\":<span class='dontknow-class'> 38%</span></p>" +
+			   " <p>Child mortality rates around the world continue to decline. Those in developing countries are much" +
+				" more likely to say it is decreasing than those in developed economies.</p>" 
+			   
+			   ;
 }	
 	
 function Slide3()
@@ -284,7 +317,7 @@ function Slide3()
 	document.getElementById("IncreasedBtn").style= "visibility:block";
 	document.getElementById("DecreasedBtn").style= "visibility:block";
 	document.getElementById("SameBtn").style= "visibility:block";
-	document.getElementById("reality-title").style= "visibility:block";	
+	//document.getElementById("reality-title").style= "visibility:block";	
 	 
 
 	refreshGraph("MaternalMortalityIncreased");
@@ -294,30 +327,40 @@ function Slide3()
 	document.getElementById("question-asked").innerHTML ="Question 3: Since 1990, the percentage of mothers around the world who have died during childbirth has…";
 	
 	document.getElementById("reality-statement").innerHTML= //"<p>Globally, maternal mortality has been declining.</p>"+ //Nearly half answer correctly, but 39 percent are unsure</p>"
-				"<p>&nbsp;</p><p>Maternal mortality has <strong>Decreased</strong>. " + 	             
+				"<p>&nbsp;</p><p><strong>Reality:</strong></br>Maternal mortality has <strong>Decreased</strong>. " + 	             
 				 " </br>Global Average People answered Correctly: <span class='correct-class'> 50%</span>" +
                " </br>Global Average People answered Wrong:  <span class='incorrect-class'> 15%</span>" +
-               " </br>Global Average People answered I do not Know:<span class='dontknow-class'> 35%	</span></p>" ;
+               " </br>Global Average People answered I do not Know:<span class='dontknow-class'> 35%	</span></p>" +
+			  "<p>Globally, maternal mortality has been declining. Even if half of the people answered correctly  " +
+			  " and the number of people that gave the wrong answer is low, there is a considerable amount of interviewees that were unsure of the right answer.</p>"
+			  ;
 }		
 
 
 function Slide4()
 {
    
-	d3.select(".country-chart").html= "";
+	//d3.select(".country-chart").html= "";
 
 	document.getElementById("IncreasedBtn").style= "visibility:hidden";
 	document.getElementById("DecreasedBtn").style= "visibility:hidden";
 	document.getElementById("SameBtn").style= "visibility:hidden";
-	document.getElementById("reality-title").style= "visibility:hidden";	
+	//document.getElementById("reality-title").style= "visibility:hidden";	
 
 	//refreshGraph("Average of Optimism");
 	
 	document.getElementById("question-asked").innerHTML ="";
 	
-	document.getElementById("reality-statement").innerHTML= //"<p> more text</p>"
-				"<p>&nbsp;</p><p>";
-			   
+	document.getElementById("reality-statement").innerHTML= //"<p> more text</p>" 
+				"<p>&nbsp;</p><p>Countries in Blue were low-income or Low-Middle income one generation ago."+
+				"</br>Countries in Yellow are Middle-Income or High-Income.</p> "+
+				"</br><strong>The Paradox of Progress:</strong> Quality of life around the world is improving. Yet around the globe, many think "+
+				" the world is getting worse<sup>2</sup>.  </p>"+
+				"<p>These findings suggest that much of the lukewarm support for aid spending in donor nations " +
+				" is strongly correlated with a misunderstanding of the effectiveness of that aid. This, in essence, " +
+				" demonstrates a messaging problem for the development sector<sup>2</sup>. </p>"
+				;	
+				
 	refreshAverageGraph();		   
 }	
 
@@ -490,13 +533,6 @@ function refreshGraph(typeofgraph){
             .attr("x",  getCallBackFunction(typeofgraph,3))
             .text(getTotalPercentText(typeofgraph) );	
 
-d3.select("svg").append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        //.style("text-decoration", "underline")  
-        .text(getGraphTitle(typeofgraph));			
 }
 	
 function getColorByIncomeLevel (incomeLevel)
@@ -507,12 +543,20 @@ function getColorByIncomeLevel (incomeLevel)
 
 }	
 
+ 
 function refreshAverageGraph(){
   
   var colorGraph= color1;
   
   cleanUpGraph();
    document.getElementById("title-chart").innerHTML="<strong>Average of optimistic answers by country<strong>";
+  /* d3.select(".country-chart").append("text")
+        .attr("x", 500)             
+        .attr("y", margin.top  + 100)
+        .attr("text-anchor", "middle")
+		.attr("class","slide4-text")
+        .text("Countries in Blue were low-income or low-middle income a generation ago");	
+*/
    insertAxis("XY");
    bars.append("circle")
             .attr("class", "cirs")
@@ -523,7 +567,24 @@ function refreshAverageGraph(){
             .attr("cx", getCallBackFunction("Average",0))
 			.attr("cy",   function (d) {
                 return y(d.Country) + 8;
-            });			
+            })
+			 .on("mouseover", function(d) {		
+            divtooltip.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            divtooltip.html(d.Country + ": "  + Math.round((d.PovertyDecreased + d.ChildMortalityDecreased + d.MaternalMortalityDecreased)/3)  + "%" )	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            divtooltip.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
+			
+		
+	
+				
 	
 }	
 	
@@ -567,8 +628,6 @@ var g;
 
 		g.append("g")
 			.attr("transform", "translate(0," + height + ")");
-			/*.call(d3.axisBottom(x));*/
-
 					
 		g.append("g")
 			.call(yAxis);
@@ -587,23 +646,7 @@ var g;
 }
 
 
-/*
-g = d3.select(".country-chart").append("g").attr("class", "axis").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-g.append("g")
-	.attr("transform", "translate(0," + height + ")");
-
-
-	//.call(d3.axisBottom(x))
-var yAxis = d3.axisLeft(y).tickSize(0); 
-			
-g.append("g")
-	.call( yAxis);
-	
-*/
-/*
-insertAxis("Y")	;
-*/	
 var bars =  d3.select(".country-chart").append("g")
 			.selectAll(".bar")
             .data(datapoverty)
